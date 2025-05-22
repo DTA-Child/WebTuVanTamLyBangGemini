@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý người dùng - Tư vấn tâm lý tuổi dậy thì</title>
+    <style>
+        :root {
+            --primary-color: #6c63ff;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --light-gray: #eee;
+            --dark-gray: #666;
+            --white: #fff;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+            --border-radius: 10px;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: var(--white);
+            padding: 15px 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .username {
+            margin-right: 15px;
+            font-weight: 500;
+        }
+        
+        .nav-links a {
+            margin-right: 20px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .logout-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+        
+        .logout-btn:hover {
+            background-color: #5a52d5;
+        }
+        
+        .container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .page-title {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .users-table-container {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+        
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .users-table th, .users-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .users-table th {
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        .users-table tr:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .users-table .user-email {
+            color: var(--dark-gray);
+        }
+        
+        .users-table .user-stats {
+            text-align: center;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            font-size: 16px;
+        }
+        
+        .search-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            cursor: pointer;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .pagination a {
+            margin: 0 5px;
+            padding: 8px 12px;
+            background-color: var(--white);
+            border-radius: 5px;
+            text-decoration: none;
+            color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .pagination a.active {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+        
+        @media (max-width: 768px) {
+            .users-table th, .users-table td {
+                padding: 8px 10px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Quản lý người dùng</h1>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('admin_dashboard') }}">Tổng quan</a>
+            <a href="{{ url_for('admin_users') }}" class="active">Người dùng</a>
+        </div>
+        <div class="user-menu">
+            <span class="username">Admin</span>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Đăng xuất</a>
+        </div>
+    </header>
+    
+    <div class="container">
+        <h2 class="page-title">Danh sách người dùng</h2>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Tìm kiếm theo tên hoặc email...">
+            <button class="search-btn" onclick="searchUsers()">Tìm kiếm</button>
+        </div>
+        
+        <div class="users-table-container">
+            <table class="users-table" id="usersTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên người dùng</th>
+                        <th>Email</th>
+                        <th>Ngày tạo</th>
+                        <th>Số tin nhắn</th>
+                        <th>Lượt đăng nhập</th>
+                        <th>Lần đăng nhập cuối</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td class="user-email">{{ user.email }}</td>
+                        <td>{{ user.created_at }}</td>
+                        <td class="user-stats">{{ user.total_messages }}</td>
+                        <td class="user-stats">{{ user.login_count }}</td>
+                        <td>{{ user.last_login }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pagination">
+            <a href="#" class="active">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+        </div>
+    </div>
+    
+    <script>
+        function searchUsers() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            const table = document.getElementById('usersTable');
+            const tr = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < tr.length; i++) {
+                const tdName = tr[i].getElementsByTagName('td')[1];
+                const tdEmail = tr[i].getElementsByTagName('td')[2];
+                if (tdName || tdEmail) {
+                    const txtValueName = tdName.textContent || tdName.innerText;
+                    const txtValueEmail = tdEmail.textContent || tdEmail.innerText;
+                    if (txtValueName.toUpperCase().indexOf(filter) > -1 || txtValueEmail.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

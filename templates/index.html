@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tư vấn tâm lý tuổi dậy thì</title>
+    <style>
+        :root {
+            --primary-color: #6c63ff;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --light-gray: #eee;
+            --dark-gray: #666;
+            --white: #fff;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+            --border-radius: 10px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: var(--white);
+            padding: 15px 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .username {
+            margin-right: 15px;
+            font-weight: 500;
+        }
+        
+        .logout-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: #5a52d5;
+        }
+        
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-title {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        .session-item-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .session-item-wrapper:hover {
+            background-color: var(--light-gray);
+        }
+
+        .session-item-wrapper.active {
+            background-color: rgba(108, 99, 255, 0.1);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .session-item {
+            flex: 1;
+            text-decoration: none;
+            color: var(--text-color);
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-form {
+            margin-right: 5px;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 5px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .delete-btn:hover {
+            opacity: 1;
+        }
+
+        /* Thêm FontAwesome cho biểu tượng xóa */
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+        .new-chat-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .new-chat-btn:hover {
+            background-color: #5a52d5;
+        }
+        
+        .sessions-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .session-item {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .session-item:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .session-item.active {
+            background-color: rgba(108, 99, 255, 0.1);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .session-time {
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+        }
+        
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            margin-bottom: 20px;
+        }
+        
+        .chat-header h2 {
+            color: var(--primary-color);
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 0;
+        }
+        
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .user .message-content {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border-radius: 15px 15px 0 15px;
+        }
+        
+        .ai .message-content {
+            background-color: var(--white);
+            border-radius: 15px 15px 15px 0;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            color: var(--dark-gray);
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .chat-input {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--shadow);
+            display: flex;
+            margin-top: 20px;
+        }
+        
+        #message-input {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        #send-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        #send-btn:hover {
+            background-color: #5a52d5;
+        }
+        
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .welcome-screen h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .welcome-screen p {
+            margin-bottom: 30px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        .start-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 12px 25px;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        .start-btn:hover {
+            background-color: #5a52d5;
+            transform: translateY(-2px);
+        }
+        .flash-messages {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            z-index: 100;
+            max-width: 300px;
+        }
+
+        .flash-message {
+            background-color: rgba(108, 99, 255, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            animation: fadeOut 0.5s ease-in-out 3s forwards;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; visibility: hidden; }
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 30vh;
+            }
+            
+            .chat-container {
+                max-height: 70vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Tư vấn tâm lý tuổi dậy thì</h1>
+        </div>
+        <div class="user-menu">
+            <span class="username">{{ username }}</span>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Đăng xuất</a>
+        </div>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    </header>
+    
+    <div class="main-container">
+        {% if get_flashed_messages() %}
+            <div class="flash-messages">
+                {% for message in get_flashed_messages() %}
+                <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="sidebar">
+            <h3 class="sidebar-title">Các phiên trò chuyện</h3>
+            <a href="{{ url_for('new_session') }}" class="new-chat-btn">+ Tạo cuộc trò chuyện mới</a>
+            
+            <div class="sessions-list">
+                {% for sess in sessions %}
+                <div class="session-item-wrapper {% if sess.session_id == active_session %}active{% endif %}">
+                    <a href="{{ url_for('switch_session', session_id=sess.session_id) }}" 
+                       class="session-item">
+                        <div>Cuộc trò chuyện #{{ loop.index }}</div>
+                        <div class="session-time">{{ sess.last_active }}</div>
+                    </a>
+                    <form action="{{ url_for('delete_session', session_id=sess.session_id) }}" method="post" class="delete-form">
+                        <button type="submit" class="delete-btn" onclick="return confirm('Bạn có chắc chắn muốn xóa phiên chat này?')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="chat-container">
+            {% if active_session %}
+                <div class="chat-header">
+                    <h2>Trò chuyện cùng chuyên gia tâm lý</h2>
+                </div>
+                
+                <div class="chat-messages" id="chat-messages">
+                    {% for message in messages %}
+                    <div class="message user">
+                        <div class="message-content">
+                            {{ message.user_message }}
+                            <div class="message-time">{{ message.timestamp }}</div>
+                        </div>
+                    </div>
+                    <div class="message ai">
+                        <div class="message-content">
+                            {{ message.ai_response }}
+                            <div class="message-time">{{ message.timestamp }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="chat-input">
+                    <input type="text" id="message-input" placeholder="Nhập tin nhắn của bạn...">
+                    <button id="send-btn">Gửi</button>
+                </div>
+            {% else %}
+                <div class="welcome-screen">
+                    <h2>Chào mừng đến với Tư vấn tâm lý tuổi dậy thì</h2>
+                    <p>Chia sẻ cảm xúc và tâm tư - bạn sẽ nhận được những lời khuyên từ chuyên gia tâm lý.</p>
+                    <p>Hãy bắt đầu trò chuyện để nhận được sự hỗ trợ.</p>
+                    <button class="start-btn" id="start-btn">Bắt đầu chia sẻ</button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageInput = document.getElementById('message-input');
+            const sendBtn = document.getElementById('send-btn');
+            const chatMessages = document.getElementById('chat-messages');
+            const startBtn = document.getElementById('start-btn');
+            
+            // Scroll to bottom of chat
+            function scrollToBottom() {
+                if (chatMessages) {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }
+            
+            // Call immediately to scroll to latest messages
+            scrollToBottom();
+            
+            // Handle welcome screen start button
+            if (startBtn) {
+                startBtn.addEventListener('click', function() {
+                    window.location.href = "{{ url_for('new_session') }}";
+                });
+            }
+            
+            // Send message function
+            function sendMessage() {
+                const message = messageInput.value.trim();
+                if (!message) return;
+                
+                // Add user message to UI
+                const userMessageDiv = document.createElement('div');
+                userMessageDiv.className = 'message user';
+                
+                const now = new Date();
+                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                userMessageDiv.innerHTML = `
+                    <div class="message-content">
+                        ${message}
+                        <div class="message-time">${timeString}</div>
+                    </div>
+                `;
+                
+                if (chatMessages) {
+                    chatMessages.appendChild(userMessageDiv);
+                    scrollToBottom();
+                } else {
+                    // If chat messages container doesn't exist yet, reload the page
+                    window.location.reload();
+                    return;
+                }
+                
+                // Clear input
+                messageInput.value = '';
+                
+                // Send to server
+                fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Add AI response to UI
+                    const aiMessageDiv = document.createElement('div');
+                    aiMessageDiv.className = 'message ai';
+                    
+                    const responseTime = new Date();
+                    const responseTimeString = responseTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    
+                    aiMessageDiv.innerHTML = `
+                        <div class="message-content">
+                            ${data.message}
+                            <div class="message-time">${responseTimeString}</div>
+                        </div>
+                    `;
+                    
+                    chatMessages.appendChild(aiMessageDiv);
+                    scrollToBottom();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Show error in chat
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'message ai';
+                    errorDiv.innerHTML = `
+                        <div class="message-content">
+                            Xin lỗi, đã xảy ra lỗi khi gửi tin nhắn. Vui lòng thử lại sau.
+                            <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                        </div>
+                    `;
+                    chatMessages.appendChild(errorDiv);
+                    scrollToBottom();
+                });
+            }
+            
+            // Send message on button click
+            if (sendBtn) {
+                sendBtn.addEventListener('click', sendMessage);
+            }
+            
+            // Send message on Enter key
+            if (messageInput) {
+                messageInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
